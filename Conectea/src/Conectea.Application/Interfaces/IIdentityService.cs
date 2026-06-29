@@ -10,4 +10,5 @@ public interface IIdentityService
         string password,
         DateTime dateOfBirth
     );
+    Task<IdentityLoginResult> LoginAsync(string email, string password);
 }

@@ -7,12 +7,50 @@ namespace Conectea.Infrastructure.Authentication;
 public class IdentityService : IIdentityService
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
 
-    public IdentityService(UserManager<ApplicationUser> userManager)
+    public IdentityService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
     {
         _userManager = userManager;
+        _signInManager = signInManager;
     }
 
+    public async Task<IdentityLoginResult> LoginAsync(string email, string password)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+
+        if (user == null)
+        {
+            return new IdentityLoginResult
+            {
+                Succeeded = false,
+                Error = "Usuário ou senha inválidos."
+            };
+        }
+
+
+        var result = await _signInManager.CheckPasswordSignInAsync(
+            user,
+            password,
+            false);
+
+
+        if (!result.Succeeded)
+        {
+            return new IdentityLoginResult
+            {
+                Succeeded = false,
+                Error = "Usuário ou senha inválidos."
+            };
+        }
+
+
+        return new IdentityLoginResult
+        {
+            Succeeded = true,
+            UserId = user.Id
+        };
+    }
 
     public async Task<IdentityOperationResult> RegisterAsync(
         string fullName,

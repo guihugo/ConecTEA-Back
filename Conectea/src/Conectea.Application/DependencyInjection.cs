@@ -1,3 +1,4 @@
+using Conectea.Application.Features.Auth.Login;
 using Conectea.Application.Features.Auth.Register;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,6 +10,7 @@ public static class DependencyInjection
         this IServiceCollection services)
     {
         services.AddScoped<RegisterHandler>();
+        services.AddScoped<LoginHandler>();
 
         return services;
     }
