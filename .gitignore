@@ -9,3 +9,7 @@ obj/
 
 # Logs
 *.log
+
+# Secrets
+*.env
+appsettings.Development.json
