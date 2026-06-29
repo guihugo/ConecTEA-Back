@@ -1,5 +1,6 @@
 using Conectea.Application.Features.Auth.Login;
 using Conectea.Application.Features.Auth.Register;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Conectea.API.Controllers;
@@ -26,5 +27,12 @@ public class AuthController : ControllerBase
         var response = await handler.Handle(command);
 
         return Ok(response);
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult Get()
+    {
+        return Ok("JWT funcionando!");
     }
 }

@@ -34,7 +34,7 @@ public class IdentityService : IIdentityService
             password,
             false);
 
-
+        
         if (!result.Succeeded)
         {
             return new IdentityLoginResult
@@ -48,7 +48,8 @@ public class IdentityService : IIdentityService
         return new IdentityLoginResult
         {
             Succeeded = true,
-            UserId = user.Id
+            UserId = user.Id,   
+            Email = user.Email
         };
     }
 

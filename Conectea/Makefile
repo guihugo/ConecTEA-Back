@@ -1,23 +1,30 @@
-PROJECT=src/Conectea.Infrastructure
-STARTUP=src/Conectea.API
+API_PROJECT=src/Conectea.API
+INFRA_PROJECT=src/Conectea.Infrastructure
+
+.PHONY: run build test migration update-db secrets-list secrets-set
+
+run:
+	dotnet run --project $(API_PROJECT)
+
+build:
+	dotnet build
+
+test:
+	dotnet test
 
 migration:
 	dotnet ef migrations add $(NAME) \
-	--project $(PROJECT) \
-	--startup-project $(STARTUP) \
-	--output-dir Persistence/Migrations
+		--project $(INFRA_PROJECT) \
+		--startup-project $(API_PROJECT) \
+		--output-dir Persistence/Migrations
 
 update-db:
 	dotnet ef database update \
-	--project $(PROJECT) \
-	--startup-project $(STARTUP)
+		--project $(INFRA_PROJECT) \
+		--startup-project $(API_PROJECT)
 
-remove-migration:
-	dotnet ef migrations remove \
-	--project $(PROJECT) \
-	--startup-project $(STARTUP)
+secrets-list:
+	cd $(API_PROJECT) && dotnet user-secrets list
 
-list-migrations:
-	dotnet ef migrations list \
-	--project $(PROJECT) \
-	--startup-project $(STARTUP)
+secrets-set:
+	cd $(API_PROJECT) && dotnet user-secrets set "$(KEY)" "$(VALUE)"

@@ -5,10 +5,12 @@ namespace Conectea.Application.Features.Auth.Login;
 public class LoginHandler
 {
     private readonly IIdentityService _identityService;
+    private readonly IJwtTokenService _jwtTokenService;
 
-    public LoginHandler(IIdentityService identityService)
+    public LoginHandler(IIdentityService identityService, IJwtTokenService jwtTokenService)
     {
         _identityService = identityService;
+        _jwtTokenService = jwtTokenService;
     }
 
 
@@ -22,13 +24,18 @@ public class LoginHandler
         if (!result.Succeeded)
         {
             throw new Exception(result.Error);
-        }
-
+        }   
+        
+        string token = _jwtTokenService.GenerateToken(
+            result.UserId!.Value,
+            result.Email!
+        );
 
         return new LoginResponse
         {
             UserId = result.UserId!.Value,
-            Email = command.Email
+            Email = command.Email,
+            Token = token
         };
     }
 }
