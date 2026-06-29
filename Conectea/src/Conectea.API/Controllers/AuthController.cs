@@ -35,4 +35,9 @@ public class AuthController : ControllerBase
     {
         return Ok("JWT funcionando!");
     }
+    [HttpGet("test")]
+    public IActionResult Test()
+    {
+        return Ok("Teste realizado com sucesso!");
+    }
 }
