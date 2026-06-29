@@ -1,6 +1,0 @@
-@Conectea_HostAddress = http://localhost:5095
-
-GET {{Conectea_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
