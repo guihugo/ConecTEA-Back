@@ -13,7 +13,7 @@ namespace Conectea.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure( this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         // JWT Settings
         var jwtSettings = new JwtSettings();
@@ -28,9 +28,7 @@ public static class DependencyInjection
 
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-            options.UseMySql(
-                connectionString,
-                ServerVersion.AutoDetect(connectionString));
+            options.UseNpgsql(connectionString);
         });
 
 
@@ -48,7 +46,7 @@ public static class DependencyInjection
             })
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
-        
+
 
 
 
