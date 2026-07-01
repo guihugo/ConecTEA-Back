@@ -15,10 +15,11 @@ public class RegisterHandler
 
     public async Task<RegisterResponse> Handle(RegisterCommand command)
     {
-        var result = await _identityService.RegisterAsync(
+        IdentityOperationResult result = await _identityService.RegisterAsync(
             command.FullName,
             command.Email,
             command.Password,
+            command.Role,
             command.DateOfBirth
         );
 
@@ -30,7 +31,8 @@ public class RegisterHandler
         return new RegisterResponse
         {
             Id = result.UserId!.Value,
-            Email = command.Email
+            Email = command.Email,
+            Role = command.Role
         };
     }
 }

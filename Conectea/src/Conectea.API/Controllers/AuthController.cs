@@ -14,7 +14,7 @@ public class AuthController : ControllerBase
         [FromBody] RegisterCommand command,
         [FromServices] RegisterHandler handler)
     {
-        var response = await handler.Handle(command);
+        RegisterResponse response = await handler.Handle(command);
 
         return Ok(response);
     }
@@ -24,7 +24,7 @@ public class AuthController : ControllerBase
         [FromBody] LoginCommand command,
         [FromServices] LoginHandler handler)
     {
-        var response = await handler.Handle(command);
+        LoginResponse response = await handler.Handle(command);
 
         return Ok(response);
     }

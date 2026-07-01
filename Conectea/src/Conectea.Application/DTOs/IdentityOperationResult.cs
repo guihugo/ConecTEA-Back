@@ -1,3 +1,5 @@
+using Conectea.Domain.Enums;
+
 namespace Conectea.Application.Abstractions.Authentication;
 
 public class IdentityOperationResult
@@ -6,6 +8,7 @@ public class IdentityOperationResult
 
     public Guid? UserId { get; init; }
     public string? Email { get; init; }
+    public UserRole? Role { get; init; }
 
     public IReadOnlyCollection<string> Errors { get; init; } = [];
 }

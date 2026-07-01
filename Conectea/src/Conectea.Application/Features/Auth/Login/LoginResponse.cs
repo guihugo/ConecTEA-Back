@@ -1,3 +1,5 @@
+using Conectea.Domain.Enums;
+
 namespace Conectea.Application.Features.Auth.Login;
 
 public class LoginResponse
@@ -6,4 +8,5 @@ public class LoginResponse
 
     public string Email { get; set; } = string.Empty;
     public string Token { get; set; } 
+    public string Role { get; set; } = string.Empty;
 }

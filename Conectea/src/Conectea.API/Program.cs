@@ -1,6 +1,8 @@
 using Conectea.API;
 using Conectea.Application;
 using Conectea.Infrastructure;
+using Conectea.Infrastructure.Authentication;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,15 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider
+        .GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+
+    await IdentitySeeder.SeedAsync(roleManager);
+}
+
 
 // Pipeline HTTP
 if (app.Environment.IsDevelopment())
