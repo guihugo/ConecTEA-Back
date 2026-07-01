@@ -1,3 +1,4 @@
+using Conectea.Application.Abstractions.Authentication;
 using Conectea.Application.Interfaces;
 
 namespace Conectea.Application.Features.Auth.Login;
@@ -16,7 +17,7 @@ public class LoginHandler
 
     public async Task<LoginResponse> Handle(LoginCommand command)
     {
-        var result = await _identityService.LoginAsync(
+        IdentityLoginResult result = await _identityService.LoginAsync(
             command.Email,
             command.Password);
 
@@ -35,6 +36,7 @@ public class LoginHandler
         {
             UserId = result.UserId!.Value,
             Email = command.Email,
+            Role = result.Role,
             Token = token
         };
     }

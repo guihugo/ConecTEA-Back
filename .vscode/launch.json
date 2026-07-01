@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Conectea API",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/Conectea/src/Conectea.API/bin/Debug/net8.0/Conectea.API.dll",
+            "cwd": "${workspaceFolder}/Conectea/src/Conectea.API",
+            "console": "internalConsole",
+            "preLaunchTask": "build Conectea API"
+        }
+    ]
+}

@@ -28,3 +28,9 @@ secrets-list:
 
 secrets-set:
 	cd $(API_PROJECT) && dotnet user-secrets set "$(KEY)" "$(VALUE)"
+
+docker-up:
+	docker compose up -d
+
+docker-down:
+	docker compose down

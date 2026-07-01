@@ -1,5 +1,6 @@
 using Conectea.Application.Abstractions.Authentication;
 using Conectea.Application.Interfaces;
+using Conectea.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace Conectea.Infrastructure.Authentication;
@@ -17,7 +18,7 @@ public class IdentityService : IIdentityService
 
     public async Task<IdentityLoginResult> LoginAsync(string email, string password)
     {
-        var user = await _userManager.FindByEmailAsync(email);
+        ApplicationUser? user = await _userManager.FindByEmailAsync(email);
 
         if (user == null)
         {
@@ -29,12 +30,12 @@ public class IdentityService : IIdentityService
         }
 
 
-        var result = await _signInManager.CheckPasswordSignInAsync(
+        SignInResult result = await _signInManager.CheckPasswordSignInAsync(
             user,
             password,
             false);
 
-        
+
         if (!result.Succeeded)
         {
             return new IdentityLoginResult
@@ -44,12 +45,16 @@ public class IdentityService : IIdentityService
             };
         }
 
+        IList<string> roles = await _userManager.GetRolesAsync(user);
+
+        string? role = roles.FirstOrDefault();
 
         return new IdentityLoginResult
         {
             Succeeded = true,
             UserId = user.Id,   
-            Email = user.Email
+            Email = user.Email,
+            Role = role
         };
     }
 
@@ -57,6 +62,7 @@ public class IdentityService : IIdentityService
         string fullName,
         string email,
         string password,
+        UserRole role,
         DateTime dateOfBirth)
     {
         var existingUser = await _userManager.FindByEmailAsync(email);
@@ -76,6 +82,7 @@ public class IdentityService : IIdentityService
             UserName = email,
             Email = email,
             FullName = fullName,
+            Role = role,
             DateOfBirth = DateOnly.FromDateTime(dateOfBirth),
             IsActive = true
         };
@@ -101,11 +108,17 @@ public class IdentityService : IIdentityService
             };
         }
 
+        await _userManager.AddToRoleAsync(
+            user,
+            role.ToString()
+        );
 
         return new IdentityOperationResult
         {
             Succeeded = true,
-            UserId = user.Id
+            UserId = user.Id,
+            Email = user.Email,
+            Role = user.Role
         };
     }
 }
