@@ -49,12 +49,14 @@ public class IdentityService : IIdentityService
 
         string? role = roles.FirstOrDefault();
 
+        UserRole parsed = Enum.Parse<UserRole>(role);
+
         return new IdentityLoginResult
         {
             Succeeded = true,
             UserId = user.Id,   
             Email = user.Email,
-            Role = role
+            Role = (int)parsed
         };
     }
 
