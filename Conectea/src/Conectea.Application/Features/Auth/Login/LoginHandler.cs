@@ -36,7 +36,7 @@ public class LoginHandler
         {
             UserId = result.UserId!.Value,
             Email = command.Email,
-            Role = result.Role,
+            Role = (int)result.Role!.Value,
             Token = token
         };
     }
