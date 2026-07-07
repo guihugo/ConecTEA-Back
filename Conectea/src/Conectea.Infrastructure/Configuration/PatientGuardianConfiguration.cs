@@ -1,5 +1,5 @@
+using Conectea.Domain.Entities;
 using Conectea.Infrastructure.Authentication;
-using Conectea.Infrastructure.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -21,9 +21,10 @@ public class PatientGuardianConfiguration : IEntityTypeConfiguration<PatientGuar
             .WithMany(x => x.Guardians)
             .HasForeignKey(x => x.PatientId);
 
-        builder.HasOne(x => x.Guardian)
+        builder.HasOne<ApplicationUser>()
             .WithMany()
-            .HasForeignKey(x => x.GuardianId);
+            .HasForeignKey(x => x.GuardianId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(x => x.Relationship)
             .IsRequired();

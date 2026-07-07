@@ -1,6 +1,8 @@
 using Conectea.Application.Interfaces;
+using Conectea.Application.Interfaces.Repositories;
 using Conectea.Infrastructure.Authentication;
 using Conectea.Infrastructure.Persistence;
+using Conectea.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -87,8 +89,10 @@ public static class DependencyInjection
 
         // Services
         services.AddScoped<IIdentityService, IdentityService>();
-
         services.AddScoped<IJwtTokenService, JwtTokenService>();
+
+        // Repositories
+        services.AddScoped<IPatientRepository, PatientRepository>();
 
 
         return services;

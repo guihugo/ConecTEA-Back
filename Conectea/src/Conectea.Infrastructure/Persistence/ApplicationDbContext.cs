@@ -1,5 +1,5 @@
+using Conectea.Domain.Entities;
 using Conectea.Infrastructure.Authentication;
-using Conectea.Infrastructure.Persistence.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

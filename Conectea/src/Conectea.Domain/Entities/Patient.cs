@@ -1,6 +1,5 @@
+using Conectea.Domain.Entities;
 using Conectea.Domain.Enums;
-using Conectea.Infrastructure.Persistence.Entities;
-
 
 public class Patient
 {
