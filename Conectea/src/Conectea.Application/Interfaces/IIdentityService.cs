@@ -1,4 +1,4 @@
-using Conectea.Application.Abstractions.Authentication;
+using Conectea.Application.DTOs.Authentication;
 using Conectea.Domain.Enums;
 
 namespace Conectea.Application.Interfaces;

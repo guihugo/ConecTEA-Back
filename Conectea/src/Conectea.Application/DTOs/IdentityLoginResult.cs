@@ -1,6 +1,6 @@
 using Conectea.Domain.Enums;
 
-namespace Conectea.Application.Abstractions.Authentication;
+namespace Conectea.Application.DTOs.Authentication;
 
 public class IdentityLoginResult
 {

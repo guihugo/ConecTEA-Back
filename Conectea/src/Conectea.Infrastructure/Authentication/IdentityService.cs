@@ -1,4 +1,4 @@
-using Conectea.Application.Abstractions.Authentication;
+using Conectea.Application.DTOs.Authentication;
 using Conectea.Application.Interfaces;
 using Conectea.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
