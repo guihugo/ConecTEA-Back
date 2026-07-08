@@ -1,4 +1,5 @@
 using Conectea.Application.Abstractions.Authentication;
+using Conectea.Application.Features.Users.Me;
 using Conectea.Application.Interfaces;
 using Conectea.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
@@ -123,4 +124,21 @@ public class IdentityService : IIdentityService
             Role = user.Role
         };
     }
+    public async Task<CurrentUserResponse> GetCurrentUserAsync(Guid userId)
+{
+    var user = await _userManager.FindByIdAsync(userId.ToString());
+
+    if (user is null)
+        throw new Exception("Usuário não encontrado.");
+
+    var roles = await _userManager.GetRolesAsync(user);
+
+    return new CurrentUserResponse
+    {
+        Id = user.Id,
+        FullName = user.FullName,
+        Email = user.Email!,
+        Role = Enum.Parse<UserRole>(roles.First())
+    };
+}
 }
