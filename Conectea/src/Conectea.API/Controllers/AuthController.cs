@@ -29,15 +29,4 @@ public class AuthController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet]
-    [Authorize]
-    public IActionResult Get()
-    {
-        return Ok("JWT funcionando!");
-    }
-    [HttpGet("test")]
-    public IActionResult Test()
-    {
-        return Ok("Teste realizado com sucesso!");
-    }
 }

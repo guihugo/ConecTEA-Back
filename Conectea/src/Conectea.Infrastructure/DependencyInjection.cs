@@ -94,6 +94,8 @@ public static class DependencyInjection
         // Repositories
         services.AddScoped<IPatientRepository, PatientRepository>();
 
+        services.AddHttpContextAccessor();
+        services.AddScoped<ICurrentUser, CurrentUser>();
 
         return services;
     }
