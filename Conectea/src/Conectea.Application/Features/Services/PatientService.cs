@@ -48,9 +48,14 @@ public class PatientService : IPatientService
 
         return patient.Id;
     }
-    public Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var patient = await _patientRepository.GetByIdAsync(id);
+
+        if (patient is null)
+            throw new KeyNotFoundException("Paciente não encontrado.");
+
+        await _patientRepository.DeleteAsync(patient);
     }
 
     public Task<IEnumerable<PatientResponse>> GetAllAsync()
@@ -61,6 +66,22 @@ public class PatientService : IPatientService
     public Task<PatientResponse?> GetByIdAsync(Guid id)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<IEnumerable<PatientResponse>> GetByTherapistIdAsync(Guid therapistId)
+    {
+        var patients = await _patientRepository.GetByTherapistIdAsync(therapistId);
+        return patients.Select(p => new PatientResponse
+        {
+            Id = p.Id,
+            FullName = p.FullName,
+            BirthDate = p.BirthDate,
+            Gender = p.Gender,
+            Diagnosis = p.Diagnosis,
+            Observation = p.Observation,
+            CreatedAt = p.CreatedAt,
+            UpdatedAt = p.UpdatedAt
+        });
     }
 
     public Task UpdateAsync(Guid id, UpdatePatientRequest request)

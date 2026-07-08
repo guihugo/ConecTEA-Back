@@ -40,6 +40,13 @@ public class PatientController : ControllerBase
 
         return Ok(patient);
     }
+    [HttpGet("therapists/{therapistId:guid}")]
+    public async Task<ActionResult<IEnumerable<PatientResponse>>> GetByTherapistIdAsync(Guid therapistId)
+    {
+        var patients = await _patientService.GetByTherapistIdAsync(therapistId);
+
+        return Ok(patients);
+    }
 
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, UpdatePatientRequest request)

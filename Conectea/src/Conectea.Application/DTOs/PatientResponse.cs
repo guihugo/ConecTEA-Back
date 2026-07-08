@@ -9,5 +9,7 @@ public class PatientResponse
     public Gender Gender { get; set; }
     public string? Diagnosis { get; set; }
     public string? Observation { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
     
 }

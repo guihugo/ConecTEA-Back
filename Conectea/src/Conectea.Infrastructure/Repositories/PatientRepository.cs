@@ -45,4 +45,12 @@ public class PatientRepository : IPatientRepository
         _context.Patients.Remove(patient);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<IEnumerable<Patient>> GetByTherapistIdAsync(Guid therapistId)
+    {
+        return await _context.Patients
+            .AsNoTracking()
+            .Where(p => p.Therapists.Any(t => t.TherapistId == therapistId))
+            .ToListAsync();
+    }
 }
