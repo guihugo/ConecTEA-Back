@@ -7,4 +7,5 @@ public class CreatePatientRequest
     public Gender Gender { get; set; }
     public string? Diagnosis { get; set; }
     public string? Observation { get; set; }
+    public string? GuardianEmail { get; internal set; }
 }

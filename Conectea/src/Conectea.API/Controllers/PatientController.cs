@@ -15,11 +15,11 @@ public class PatientController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create(CreatePatientRequest request)
+    public async Task<ActionResult<CreatePatientResponse>> Create(CreatePatientRequest request)
     {
-        Guid id = await _patientService.CreateAsync(request);
+        var response = await _patientService.CreateAsync(request);
 
-        return CreatedAtAction(nameof(GetById), new { id }, id);
+        return CreatedAtAction(nameof(GetById), new { id = response.PatientId }, response);
     }
 
     [HttpGet]

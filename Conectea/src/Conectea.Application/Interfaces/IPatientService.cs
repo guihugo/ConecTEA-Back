@@ -1,6 +1,6 @@
 public interface IPatientService
 {
-    Task<Guid> CreateAsync(CreatePatientRequest request);
+    Task<CreatePatientResponse> CreateAsync(CreatePatientRequest request);
 
     Task<PatientResponse?> GetByIdAsync(Guid id);
 

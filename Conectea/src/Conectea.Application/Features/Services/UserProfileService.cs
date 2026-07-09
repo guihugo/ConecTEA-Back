@@ -9,18 +9,14 @@ public class UserProfileService : IUserProfileService
     private readonly IGuardianRepository _guardianRepository;
 
 
-    public UserProfileService(
-        ITherapistRepository therapistRepository,
-        IGuardianRepository guardianRepository)
+    public UserProfileService(ITherapistRepository therapistRepository, IGuardianRepository guardianRepository)
     {
         _therapistRepository = therapistRepository;
         _guardianRepository = guardianRepository;
     }
 
 
-    public async Task CreateAsync(
-        Guid userId,
-        UserRole role)
+    public async Task CreateAsync( Guid userId, UserRole role)
     {
         if (role == UserRole.Therapist)
         {

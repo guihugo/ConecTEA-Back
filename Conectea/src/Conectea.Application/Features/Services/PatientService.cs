@@ -10,13 +10,15 @@ public class PatientService : IPatientService
     private readonly IPatientRepository _patientRepository;
     private readonly ICurrentUser _currentUserService;
     private readonly ITherapistRepository _therapistRepository;
-    public PatientService(IPatientRepository patientRepository, ICurrentUser currentUser, ITherapistRepository therapistRepository)
+    private readonly IGuardianInvitationService _guardianInvitationService;
+    public PatientService(IPatientRepository patientRepository, ICurrentUser currentUser, ITherapistRepository therapistRepository, IGuardianInvitationService guardianInvitationService)
     {
         _patientRepository = patientRepository;
         _currentUserService = currentUser;
         _therapistRepository = therapistRepository;
+        _guardianInvitationService = guardianInvitationService;
     }
-    public async Task<Guid> CreateAsync(CreatePatientRequest request)
+    public async Task<CreatePatientResponse> CreateAsync(CreatePatientRequest request)
     {
         var userId = _currentUserService.UserId;
 
@@ -33,7 +35,7 @@ public class PatientService : IPatientService
         }
 
 
-        var patient = new Patient
+        Patient patient = new Patient
         {
             Id = Guid.NewGuid(),
             FullName = request.FullName,
@@ -57,7 +59,13 @@ public class PatientService : IPatientService
 
         await _patientRepository.AddAsync(patient);
 
-        return patient.Id;
+        string invitationCode = await _guardianInvitationService.CreateAsync(patient.Id);
+
+        return new CreatePatientResponse
+        {
+            PatientId = patient.Id,
+            InvitationCode = invitationCode
+        };
     }
     public async Task DeleteAsync(Guid id)
     {
