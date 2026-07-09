@@ -1,3 +1,4 @@
+using Conectea.Application.Interfaces;
 using Conectea.Application.Interfaces.Repositories;
 using Conectea.Domain.Entities;
 
@@ -7,13 +8,31 @@ namespace Conectea.Application.Services;
 public class PatientService : IPatientService
 {
     private readonly IPatientRepository _patientRepository;
-
-    public PatientService(IPatientRepository patientRepository)
+    private readonly ICurrentUser _currentUserService;
+    private readonly ITherapistRepository _therapistRepository;
+    public PatientService(IPatientRepository patientRepository, ICurrentUser currentUser, ITherapistRepository therapistRepository)
     {
         _patientRepository = patientRepository;
+        _currentUserService = currentUser;
+        _therapistRepository = therapistRepository;
     }
     public async Task<Guid> CreateAsync(CreatePatientRequest request)
     {
+        var userId = _currentUserService.UserId;
+
+
+        var therapist = await _therapistRepository
+            .GetByUserIdAsync(userId);
+
+
+        if (therapist is null)
+        {
+            throw new Exception(
+                "Usuário não possui terapeuta associado."
+            );
+        }
+
+
         var patient = new Patient
         {
             Id = Guid.NewGuid(),
@@ -26,23 +45,15 @@ public class PatientService : IPatientService
             UpdatedAt = DateTime.UtcNow
         };
 
-        patient.Guardians.Add(new PatientGuardian
+
+        patient.Therapists.Add(new PatientTherapist
         {
             PatientId = patient.Id,
-            GuardianId = request.GuardianId,
-            Relationship = request.GuardianRelationship
+            TherapistId = therapist.Id,
+            StartDate = DateTime.UtcNow,
+            IsMainTherapist = true
         });
 
-        if (request.TherapistId.HasValue)
-        {
-            patient.Therapists.Add(new PatientTherapist
-            {
-                PatientId = patient.Id,
-                TherapistId = request.TherapistId.Value,
-                StartDate = DateTime.UtcNow,
-                IsMainTherapist = true
-            });
-        }
 
         await _patientRepository.AddAsync(patient);
 
