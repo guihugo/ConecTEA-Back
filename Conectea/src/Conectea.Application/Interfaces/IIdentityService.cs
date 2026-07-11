@@ -1,4 +1,5 @@
-using Conectea.Application.Abstractions.Authentication;
+using Conectea.Application.DTOs.Authentication;
+using Conectea.Application.Features.Users.Me;
 using Conectea.Domain.Enums;
 
 namespace Conectea.Application.Interfaces;
@@ -13,4 +14,5 @@ public interface IIdentityService
         DateTime dateOfBirth
     );
     Task<IdentityLoginResult> LoginAsync(string email, string password);
+    Task<CurrentUserResponse> GetCurrentUserAsync(Guid userId);
 }

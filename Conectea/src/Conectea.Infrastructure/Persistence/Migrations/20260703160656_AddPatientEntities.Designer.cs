@@ -3,6 +3,7 @@ using System;
 using Conectea.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Conectea.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260703160656_AddPatientEntities")]
+    partial class AddPatientEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,82 +24,6 @@ namespace Conectea.Infrastructure.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("Conectea.Domain.Entities.Guardian", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Guardians");
-                });
-
-            modelBuilder.Entity("Conectea.Domain.Entities.PatientGuardian", b =>
-                {
-                    b.Property<Guid>("PatientId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("GuardianId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Relationship")
-                        .HasColumnType("integer");
-
-                    b.HasKey("PatientId", "GuardianId");
-
-                    b.HasIndex("GuardianId");
-
-                    b.ToTable("PatientGuardians", (string)null);
-                });
-
-            modelBuilder.Entity("Conectea.Domain.Entities.PatientTherapist", b =>
-                {
-                    b.Property<Guid>("PatientId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("TherapistId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsMainTherapist")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("PatientId", "TherapistId");
-
-                    b.HasIndex("TherapistId");
-
-                    b.ToTable("PatientTherapists", (string)null);
-                });
-
-            modelBuilder.Entity("Conectea.Domain.Entities.Therapist", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Therapists");
-                });
 
             modelBuilder.Entity("Conectea.Infrastructure.Authentication.ApplicationUser", b =>
                 {
@@ -183,39 +110,46 @@ namespace Conectea.Infrastructure.Persistence.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("GuardianInvitation", b =>
+            modelBuilder.Entity("Conectea.Infrastructure.Persistence.Entities.PatientGuardian", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("AcceptedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
                     b.Property<Guid>("PatientId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("Status")
+                    b.Property<Guid>("GuardianId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Relationship")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                    b.HasKey("PatientId", "GuardianId");
 
-                    b.HasKey("Id");
+                    b.HasIndex("GuardianId");
 
-                    b.HasIndex("PatientId");
+                    b.ToTable("PatientGuardians", (string)null);
+                });
 
-                    b.ToTable("GuardianInvitations");
+            modelBuilder.Entity("Conectea.Infrastructure.Persistence.Entities.PatientTherapist", b =>
+                {
+                    b.Property<Guid>("PatientId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("TherapistId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsMainTherapist")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("PatientId", "TherapistId");
+
+                    b.HasIndex("TherapistId");
+
+                    b.ToTable("PatientTherapists", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -383,21 +317,12 @@ namespace Conectea.Infrastructure.Persistence.Migrations
                     b.ToTable("Patients", (string)null);
                 });
 
-            modelBuilder.Entity("Conectea.Domain.Entities.Guardian", b =>
+            modelBuilder.Entity("Conectea.Infrastructure.Persistence.Entities.PatientGuardian", b =>
                 {
-                    b.HasOne("Conectea.Infrastructure.Authentication.ApplicationUser", null)
-                        .WithOne()
-                        .HasForeignKey("Conectea.Domain.Entities.Guardian", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Conectea.Domain.Entities.PatientGuardian", b =>
-                {
-                    b.HasOne("Conectea.Domain.Entities.Guardian", "Guardian")
-                        .WithMany("Patients")
+                    b.HasOne("Conectea.Infrastructure.Authentication.ApplicationUser", "Guardian")
+                        .WithMany()
                         .HasForeignKey("GuardianId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Patient", "Patient")
@@ -411,7 +336,7 @@ namespace Conectea.Infrastructure.Persistence.Migrations
                     b.Navigation("Patient");
                 });
 
-            modelBuilder.Entity("Conectea.Domain.Entities.PatientTherapist", b =>
+            modelBuilder.Entity("Conectea.Infrastructure.Persistence.Entities.PatientTherapist", b =>
                 {
                     b.HasOne("Patient", "Patient")
                         .WithMany("Therapists")
@@ -419,35 +344,15 @@ namespace Conectea.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Conectea.Domain.Entities.Therapist", "Therapist")
-                        .WithMany("Patients")
+                    b.HasOne("Conectea.Infrastructure.Authentication.ApplicationUser", "Therapist")
+                        .WithMany()
                         .HasForeignKey("TherapistId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Patient");
 
                     b.Navigation("Therapist");
-                });
-
-            modelBuilder.Entity("Conectea.Domain.Entities.Therapist", b =>
-                {
-                    b.HasOne("Conectea.Infrastructure.Authentication.ApplicationUser", null)
-                        .WithOne()
-                        .HasForeignKey("Conectea.Domain.Entities.Therapist", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("GuardianInvitation", b =>
-                {
-                    b.HasOne("Patient", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -499,16 +404,6 @@ namespace Conectea.Infrastructure.Persistence.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Conectea.Domain.Entities.Guardian", b =>
-                {
-                    b.Navigation("Patients");
-                });
-
-            modelBuilder.Entity("Conectea.Domain.Entities.Therapist", b =>
-                {
-                    b.Navigation("Patients");
                 });
 
             modelBuilder.Entity("Patient", b =>

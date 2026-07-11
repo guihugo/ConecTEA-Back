@@ -1,4 +1,4 @@
-using Conectea.Application.Abstractions.Authentication;
+using Conectea.Application.DTOs.Authentication;
 using Conectea.Application.Interfaces;
 
 namespace Conectea.Application.Features.Auth.Login;
