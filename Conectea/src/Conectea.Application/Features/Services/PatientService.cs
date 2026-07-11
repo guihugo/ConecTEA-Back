@@ -1,3 +1,4 @@
+using Conectea.Application.Interfaces;
 using Conectea.Application.Interfaces.Repositories;
 using Conectea.Domain.Entities;
 
@@ -7,14 +8,34 @@ namespace Conectea.Application.Services;
 public class PatientService : IPatientService
 {
     private readonly IPatientRepository _patientRepository;
-
-    public PatientService(IPatientRepository patientRepository)
+    private readonly ICurrentUser _currentUserService;
+    private readonly ITherapistRepository _therapistRepository;
+    private readonly IGuardianInvitationService _guardianInvitationService;
+    public PatientService(IPatientRepository patientRepository, ICurrentUser currentUser, ITherapistRepository therapistRepository, IGuardianInvitationService guardianInvitationService)
     {
         _patientRepository = patientRepository;
+        _currentUserService = currentUser;
+        _therapistRepository = therapistRepository;
+        _guardianInvitationService = guardianInvitationService;
     }
-    public async Task<Guid> CreateAsync(CreatePatientRequest request)
+    public async Task<CreatePatientResponse> CreateAsync(CreatePatientRequest request)
     {
-        var patient = new Patient
+        var userId = _currentUserService.UserId;
+
+
+        var therapist = await _therapistRepository
+            .GetByUserIdAsync(userId);
+
+
+        if (therapist is null)
+        {
+            throw new Exception(
+                "Usuário não possui terapeuta associado."
+            );
+        }
+
+
+        Patient patient = new Patient
         {
             Id = Guid.NewGuid(),
             FullName = request.FullName,
@@ -26,27 +47,25 @@ public class PatientService : IPatientService
             UpdatedAt = DateTime.UtcNow
         };
 
-        patient.Guardians.Add(new PatientGuardian
+
+        patient.Therapists.Add(new PatientTherapist
         {
             PatientId = patient.Id,
-            GuardianId = request.GuardianId,
-            Relationship = request.GuardianRelationship
+            TherapistId = therapist.Id,
+            StartDate = DateTime.UtcNow,
+            IsMainTherapist = true
         });
 
-        if (request.TherapistId.HasValue)
-        {
-            patient.Therapists.Add(new PatientTherapist
-            {
-                PatientId = patient.Id,
-                TherapistId = request.TherapistId.Value,
-                StartDate = DateTime.UtcNow,
-                IsMainTherapist = true
-            });
-        }
 
         await _patientRepository.AddAsync(patient);
 
-        return patient.Id;
+        string invitationCode = await _guardianInvitationService.CreateAsync(patient.Id);
+
+        return new CreatePatientResponse
+        {
+            PatientId = patient.Id,
+            InvitationCode = invitationCode
+        };
     }
     public async Task DeleteAsync(Guid id)
     {
@@ -68,9 +87,22 @@ public class PatientService : IPatientService
         throw new NotImplementedException();
     }
 
-    public async Task<IEnumerable<PatientResponse>> GetByTherapistIdAsync(Guid therapistId)
+    public async Task<IEnumerable<PatientResponse>> GetByPacientByTherapistIdAsync()
     {
-        var patients = await _patientRepository.GetByTherapistIdAsync(therapistId);
+        var userId = _currentUserService.UserId;
+
+
+        var therapist = await _therapistRepository
+            .GetByUserIdAsync(userId);
+
+        if (therapist is null)
+        {
+            throw new Exception(
+                "Terapeuta não encontrado."
+            );
+        }
+
+        var patients = await _patientRepository.GetByTherapistIdAsync(therapist.Id);
         return patients.Select(p => new PatientResponse
         {
             Id = p.Id,

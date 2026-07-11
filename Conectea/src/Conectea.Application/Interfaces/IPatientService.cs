@@ -1,6 +1,6 @@
 public interface IPatientService
 {
-    Task<Guid> CreateAsync(CreatePatientRequest request);
+    Task<CreatePatientResponse> CreateAsync(CreatePatientRequest request);
 
     Task<PatientResponse?> GetByIdAsync(Guid id);
 
@@ -10,5 +10,5 @@ public interface IPatientService
 
     Task DeleteAsync(Guid id);
 
-    Task<IEnumerable<PatientResponse>> GetByTherapistIdAsync(Guid therapistId);
+    Task<IEnumerable<PatientResponse>> GetByPacientByTherapistIdAsync();
 }

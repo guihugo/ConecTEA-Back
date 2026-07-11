@@ -1,5 +1,4 @@
 using Conectea.Domain.Entities;
-using Conectea.Infrastructure.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -21,8 +20,9 @@ public class PatientTherapistConfiguration : IEntityTypeConfiguration<PatientThe
             .WithMany(x => x.Therapists)
             .HasForeignKey(x => x.PatientId);
 
-        builder.HasOne<ApplicationUser>()
-            .WithMany()
+
+        builder.HasOne(x => x.Therapist)
+            .WithMany(x => x.Patients)
             .HasForeignKey(x => x.TherapistId)
             .OnDelete(DeleteBehavior.Restrict);
 

@@ -1,7 +1,6 @@
 using Conectea.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 
-
 namespace Conectea.Infrastructure.Authentication;
 public class ApplicationUser : IdentityUser<Guid>
 {

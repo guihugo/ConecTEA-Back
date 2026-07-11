@@ -9,4 +9,10 @@ public class ValidationException : Exception
     {
         Errors = errors.ToList();
     }
+
+    public ValidationException(string error)
+        : base("Um ou mais erros de validação ocorreram.")
+    {
+        Errors = new List<string> { error };
+    }
 }

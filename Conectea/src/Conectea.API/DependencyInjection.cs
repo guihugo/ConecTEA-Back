@@ -1,5 +1,3 @@
-using Conectea.Application.Services;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
 namespace Conectea.API;
@@ -39,7 +37,6 @@ public static class DependencyInjection
                 }
             });
         });
-        services.AddScoped<IPatientService, PatientService>();
 
         return services;
     }

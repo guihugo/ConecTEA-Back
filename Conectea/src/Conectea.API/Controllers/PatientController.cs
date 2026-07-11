@@ -1,3 +1,4 @@
+using Conectea.Application.Features.Invitations.AcceptInvitation;
 using Conectea.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,11 +16,11 @@ public class PatientController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create(CreatePatientRequest request)
+    public async Task<ActionResult<CreatePatientResponse>> Create(CreatePatientRequest request)
     {
-        var id = await _patientService.CreateAsync(request);
+        var response = await _patientService.CreateAsync(request);
 
-        return CreatedAtAction(nameof(GetById), new { id }, id);
+        return CreatedAtAction(nameof(GetById), new { id = response.PatientId }, response);
     }
 
     [HttpGet]
@@ -40,10 +41,10 @@ public class PatientController : ControllerBase
 
         return Ok(patient);
     }
-    [HttpGet("therapists/{therapistId:guid}")]
-    public async Task<ActionResult<IEnumerable<PatientResponse>>> GetByTherapistIdAsync(Guid therapistId)
+    [HttpGet("therapist/")]
+    public async Task<ActionResult<IEnumerable<PatientResponse>>> GetByPacientByTherapistIdAsync()
     {
-        var patients = await _patientService.GetByTherapistIdAsync(therapistId);
+        var patients = await _patientService.GetByPacientByTherapistIdAsync();
 
         return Ok(patients);
     }

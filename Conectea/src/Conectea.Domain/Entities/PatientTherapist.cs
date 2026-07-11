@@ -5,6 +5,7 @@ public class PatientTherapist
     public Guid PatientId { get; set; }
     public Patient Patient { get; set; } = null!;
     public Guid TherapistId { get; set; }
+    public Therapist Therapist { get; set; } = null!;
     public DateTime StartDate { get; set; }
     public DateTime? EndDate { get; set; }
     public bool IsMainTherapist { get; set; }
