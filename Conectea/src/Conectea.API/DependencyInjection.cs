@@ -1,8 +1,3 @@
-using Conectea.Application.Interfaces;
-using Conectea.Application.Interfaces.Repositories;
-using Conectea.Application.Services;
-using Conectea.Infrastructure.Persistence.Repositories;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
 namespace Conectea.API;
@@ -42,10 +37,6 @@ public static class DependencyInjection
                 }
             });
         });
-        services.AddScoped<IPatientService, PatientService>();
-        services.AddScoped<IUserProfileService, UserProfileService>();
-        services.AddScoped<ITherapistRepository, TherapistRepository>();
-        services.AddScoped<IGuardianRepository, GuardianRepository>();
 
         return services;
     }

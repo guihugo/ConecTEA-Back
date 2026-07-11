@@ -1,8 +1,9 @@
-namespace Conectea.Application.Interfaces;
+using Conectea.Application.Features.Invitations.AcceptInvitation;
 
 public interface IGuardianInvitationService
 {
     Task<string> CreateAsync(Guid patientId);
 
-    Task AcceptAsync(string code, Guid guardianId);
+    Task<AcceptInvitationResponse> AcceptAsync(string code);
+    Task<bool> HasLinked();
 }

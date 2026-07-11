@@ -88,16 +88,16 @@ public static class DependencyInjection
             });
 
 
-        // Services
+        // Services técnicos
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IInvitationCodeGenerator, InvitationCodeGenerator>();
-        services.AddScoped<IGuardianInvitationService, GuardianInvitationService>();
-
 
         // Repositories
         services.AddScoped<IPatientRepository, PatientRepository>();
-        services.AddScoped<IGuardianInvitationRepository,GuardianInvitationRepository>();
+        services.AddScoped<ITherapistRepository, TherapistRepository>();
+        services.AddScoped<IGuardianRepository, GuardianRepository>();
+        services.AddScoped<IGuardianInvitationRepository, GuardianInvitationRepository>();
 
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUser, CurrentUser>();

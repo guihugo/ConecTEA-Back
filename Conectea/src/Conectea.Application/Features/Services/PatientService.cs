@@ -87,9 +87,22 @@ public class PatientService : IPatientService
         throw new NotImplementedException();
     }
 
-    public async Task<IEnumerable<PatientResponse>> GetByTherapistIdAsync(Guid therapistId)
+    public async Task<IEnumerable<PatientResponse>> GetByPacientByTherapistIdAsync()
     {
-        var patients = await _patientRepository.GetByTherapistIdAsync(therapistId);
+        var userId = _currentUserService.UserId;
+
+
+        var therapist = await _therapistRepository
+            .GetByUserIdAsync(userId);
+
+        if (therapist is null)
+        {
+            throw new Exception(
+                "Terapeuta não encontrado."
+            );
+        }
+
+        var patients = await _patientRepository.GetByTherapistIdAsync(therapist.Id);
         return patients.Select(p => new PatientResponse
         {
             Id = p.Id,

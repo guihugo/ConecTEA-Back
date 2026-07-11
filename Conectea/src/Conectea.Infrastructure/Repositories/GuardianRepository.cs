@@ -35,4 +35,20 @@ public class GuardianRepository : IGuardianRepository
         await _context.Guardians.AddAsync(guardian);
         await _context.SaveChangesAsync();
     }
+    public async Task LinkPatientAsync(Guid guardianId, Guid patientId)
+    {
+        _context.PatientGuardians.Add(new PatientGuardian
+        {
+            GuardianId = guardianId,
+            PatientId = patientId
+        });
+
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> LinkedPatientExistsAsync(Guid guardianId)
+    {
+        return await _context.PatientGuardians
+            .AnyAsync(pg => pg.GuardianId == guardianId);
+    }
 }
