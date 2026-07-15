@@ -24,9 +24,13 @@ public class LoginHandler
 
         if (!result.Succeeded)
         {
-            throw new Exception(result.Error);
-        }   
-        
+            return new LoginResponse
+            {
+                Succeeded = false,
+                Error = result.Error
+            };
+        }
+
         string token = _jwtTokenService.GenerateToken(
             result.UserId!.Value,
             result.Email!
@@ -34,6 +38,7 @@ public class LoginHandler
 
         return new LoginResponse
         {
+            Succeeded = true,
             UserId = result.UserId!.Value,
             Email = command.Email,
             Role = (int)result.Role!.Value,

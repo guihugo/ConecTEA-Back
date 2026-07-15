@@ -8,4 +8,6 @@ public class LoginResponse
     public string Email { get; set; } = string.Empty;
     public string Token { get; set; } 
     public int Role { get; set; }
+    public bool Succeeded { get; set; }
+    public string? Error { get; set; }
 }
