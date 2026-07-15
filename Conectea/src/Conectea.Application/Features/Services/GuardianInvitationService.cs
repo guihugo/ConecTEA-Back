@@ -42,7 +42,7 @@ public class GuardianInvitationService : IGuardianInvitationService
         if (string.IsNullOrWhiteSpace(code))
         {
             throw new ValidationException(
-                "Código do convite é obrigatório.");
+                "CÃ³digo do convite Ã© obrigatÃ³rio.");
         }
 
         var userId = _currentUserService.UserId;
@@ -52,7 +52,7 @@ public class GuardianInvitationService : IGuardianInvitationService
         if (guardian is null)
         {
             throw new NotFoundException(
-                "Responsável não encontrado.");
+                "ResponsÃ¡vel nÃ£o encontrado.");
         }
 
 
@@ -61,12 +61,12 @@ public class GuardianInvitationService : IGuardianInvitationService
         if (invitation is null)
         {
             throw new NotFoundException(
-                "Convite não encontrado.");
+                "Convite nÃ£o encontrado.");
         }
 
         if (invitation.Status != InvitationStatus.Pending)
         {
-            throw new ConflictException("Este convite já foi utilizado.");
+            throw new ConflictException("Este convite jÃ¡ foi utilizado.");
         }
 
         await _guardianRepository.LinkPatientAsync(
@@ -89,7 +89,7 @@ public class GuardianInvitationService : IGuardianInvitationService
         var userId = _currentUserService.UserId;
 
         var guardian = await _guardianRepository.GetByUserIdAsync(userId)
-            ?? throw new ValidationException("Usu�rio n�o possui respons�vel associado.");
+            ?? throw new ValidationException("Usuï¿½rio nï¿½o possui responsï¿½vel associado.");
 
         return await _guardianRepository.LinkedPatientExistsAsync(guardian.Id);
     }
