@@ -11,18 +11,13 @@ public class GuardianInvitationService : IGuardianInvitationService
     private readonly IInvitationCodeGenerator _codeGenerator;
     private readonly ICurrentUser _currentUserService;
 
-    public GuardianInvitationService( IGuardianInvitationRepository repository, IInvitationCodeGenerator codeGenerator, 
+    public GuardianInvitationService(IGuardianInvitationRepository repository, IInvitationCodeGenerator codeGenerator,
         ICurrentUser currentUserService, IGuardianRepository guardianRepository)
     {
         _repository = repository;
         _codeGenerator = codeGenerator;
         _currentUserService = currentUserService;
         _guardianRepository = guardianRepository;
-    }
-
-    public Task AcceptAsync(string code, Guid guardianId)
-    {
-        throw new NotImplementedException();
     }
 
     public async Task<string> CreateAsync(Guid patientId)
@@ -44,25 +39,34 @@ public class GuardianInvitationService : IGuardianInvitationService
     }
     public async Task<AcceptInvitationResponse> AcceptAsync(string code)
     {
+        if (string.IsNullOrWhiteSpace(code))
+        {
+            throw new ValidationException(
+                "CÃ³digo do convite Ã© obrigatÃ³rio.");
+        }
+
         var userId = _currentUserService.UserId;
 
         var guardian = await _guardianRepository.GetByUserIdAsync(userId);
 
         if (guardian is null)
         {
-            throw new ValidationException("Usu�rio n�o possui respons�vel associado.");
+            throw new NotFoundException(
+                "ResponsÃ¡vel nÃ£o encontrado.");
         }
+
 
         var invitation = await _repository.GetByTokenAsync(code);
 
         if (invitation is null)
         {
-            throw new ValidationException("Convite n�o encontrado.");
+            throw new NotFoundException(
+                "Convite nÃ£o encontrado.");
         }
 
         if (invitation.Status != InvitationStatus.Pending)
         {
-            throw new ValidationException("Este convite j� foi utilizado.");
+            throw new ConflictException("Este convite jÃ¡ foi utilizado.");
         }
 
         await _guardianRepository.LinkPatientAsync(
@@ -85,7 +89,7 @@ public class GuardianInvitationService : IGuardianInvitationService
         var userId = _currentUserService.UserId;
 
         var guardian = await _guardianRepository.GetByUserIdAsync(userId)
-            ?? throw new ValidationException("Usu�rio n�o possui respons�vel associado.");
+            ?? throw new ValidationException("Usuï¿½rio nï¿½o possui responsï¿½vel associado.");
 
         return await _guardianRepository.LinkedPatientExistsAsync(guardian.Id);
     }

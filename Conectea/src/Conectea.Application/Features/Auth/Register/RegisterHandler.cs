@@ -28,7 +28,11 @@ public class RegisterHandler
 
         if (!result.Succeeded)
         {
-            throw new ValidationException(result.Errors);
+            return new RegisterResponse
+            {
+                Succeeded = false,
+                Errors = result.Errors
+            };
         }
 
         await _profileService.CreateAsync(
@@ -38,6 +42,7 @@ public class RegisterHandler
         
         return new RegisterResponse
         {
+            Succeeded = true,
             Id = result.UserId!.Value,
             Email = command.Email,
             Role = command.Role

@@ -1,3 +1,4 @@
+using Conectea.Application.Exceptions;
 using Conectea.Application.Interfaces;
 using Conectea.Application.Interfaces.Repositories;
 using Conectea.Domain.Entities;
@@ -29,9 +30,7 @@ public class PatientService : IPatientService
 
         if (therapist is null)
         {
-            throw new Exception(
-                "Usuário não possui terapeuta associado."
-            );
+            throw new NotFoundException("Terapeuta não encontrado.");
         }
 
 
@@ -72,7 +71,7 @@ public class PatientService : IPatientService
         var patient = await _patientRepository.GetByIdAsync(id);
 
         if (patient is null)
-            throw new KeyNotFoundException("Paciente não encontrado.");
+            throw new NotFoundException("Paciente não encontrado.");
 
         await _patientRepository.DeleteAsync(patient);
     }
@@ -97,9 +96,7 @@ public class PatientService : IPatientService
 
         if (therapist is null)
         {
-            throw new Exception(
-                "Terapeuta não encontrado."
-            );
+            throw new NotFoundException("Terapeuta não encontrado.");
         }
 
         var patients = await _patientRepository.GetByTherapistIdAsync(therapist.Id);
