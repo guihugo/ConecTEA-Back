@@ -8,6 +8,9 @@ public static class DependencyInjection
     {
         services.AddControllers();
 
+        services.AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddProblemDetails();
+        
         services.AddEndpointsApiExplorer();
 
         services.AddSwaggerGen(options =>
