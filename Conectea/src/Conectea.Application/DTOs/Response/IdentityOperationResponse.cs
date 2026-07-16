@@ -2,7 +2,7 @@ using Conectea.Domain.Enums;
 
 namespace Conectea.Application.DTOs.Authentication;
 
-public class IdentityOperationResult
+public class IdentityOperationResponse
 {
     public bool Succeeded { get; init; }
 

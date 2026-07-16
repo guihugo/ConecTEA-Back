@@ -17,7 +17,7 @@ public class LoginHandler
 
     public async Task<LoginResponse> Handle(LoginCommand command)
     {
-        IdentityLoginResult result = await _identityService.LoginAsync(
+        IdentityLoginResponse result = await _identityService.LoginAsync(
             command.Email,
             command.Password);
 

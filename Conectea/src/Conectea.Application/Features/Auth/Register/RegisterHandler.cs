@@ -18,7 +18,7 @@ public class RegisterHandler
 
     public async Task<RegisterResponse> Handle(RegisterCommand command)
     {
-        IdentityOperationResult result = await _identityService.RegisterAsync(
+        IdentityOperationResponse result = await _identityService.RegisterAsync(
             command.FullName,
             command.Email,
             command.Password,

@@ -17,13 +17,13 @@ public class IdentityService : IIdentityService
         _signInManager = signInManager;
     }
 
-    public async Task<IdentityLoginResult> LoginAsync(string email, string password)
+    public async Task<IdentityLoginResponse> LoginAsync(string email, string password)
     {
         ApplicationUser? user = await _userManager.FindByEmailAsync(email);
 
         if (user == null)
         {
-            return new IdentityLoginResult
+            return new IdentityLoginResponse
             {
                 Succeeded = false,
                 Error = "Usuário ou senha inválidos."
@@ -39,7 +39,7 @@ public class IdentityService : IIdentityService
 
         if (!result.Succeeded)
         {
-            return new IdentityLoginResult
+            return new IdentityLoginResponse
             {
                 Succeeded = false,
                 Error = "Usuário ou senha inválidos."
@@ -52,7 +52,7 @@ public class IdentityService : IIdentityService
 
         UserRole parsed = Enum.Parse<UserRole>(role);
 
-        return new IdentityLoginResult
+        return new IdentityLoginResponse
         {
             Succeeded = true,
             UserId = user.Id,   
@@ -61,7 +61,7 @@ public class IdentityService : IIdentityService
         };
     }
 
-    public async Task<IdentityOperationResult> RegisterAsync(
+    public async Task<IdentityOperationResponse> RegisterAsync(
         string fullName,
         string email,
         string password,
@@ -72,7 +72,7 @@ public class IdentityService : IIdentityService
 
         if (existingUser != null)
         {
-            return new IdentityOperationResult
+            return new IdentityOperationResponse
             {
                 Succeeded = false,
                 Errors = ["Usuário já cadastrado."]
@@ -104,7 +104,7 @@ public class IdentityService : IIdentityService
                 result.Errors.Select(x => x.Description)
             );
 
-            return new IdentityOperationResult
+            return new IdentityOperationResponse
             {
                 Succeeded = false,
                 Errors = [errors]
@@ -116,7 +116,7 @@ public class IdentityService : IIdentityService
             role.ToString()
         );
 
-        return new IdentityOperationResult
+        return new IdentityOperationResponse
         {
             Succeeded = true,
             UserId = user.Id,

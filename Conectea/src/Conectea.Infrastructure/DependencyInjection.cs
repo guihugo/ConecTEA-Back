@@ -4,6 +4,7 @@ using Conectea.Infrastructure.Authentication;
 using Conectea.Infrastructure.Persistence;
 using Conectea.Infrastructure.Persistence.Repositories;
 using Conectea.Infrastructure.Repositories;
+using Conectea.Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -51,7 +52,11 @@ public static class DependencyInjection
             .AddDefaultTokenProviders();
 
 
-
+        if (string.IsNullOrWhiteSpace(jwtSettings.Key))
+        {
+            throw new InvalidOperationException(
+                "Jwt:Key is not configured. Configure it using 'dotnet user-secrets' or an environment variable.");
+        }
 
         services.AddSingleton(jwtSettings);
 
@@ -88,16 +93,33 @@ public static class DependencyInjection
             });
 
 
-        // Services técnicos
+        //Encryption Settings
+        var encryptionSettings = new EncryptionSettings();
+
+        configuration
+            .GetSection("Encryption")
+            .Bind(encryptionSettings);
+
+        if (string.IsNullOrWhiteSpace(encryptionSettings.Key))
+        {
+            throw new InvalidOperationException(
+                "Encryption:Key is not configured. Configure it using 'dotnet user-secrets' or an environment variable.");
+        }
+
+        services.AddSingleton(encryptionSettings);
+
+        // Services
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IInvitationCodeGenerator, InvitationCodeGenerator>();
+        services.AddScoped<IEncryptionService, AesEncryptionService>();
 
         // Repositories
         services.AddScoped<IPatientRepository, PatientRepository>();
         services.AddScoped<ITherapistRepository, TherapistRepository>();
         services.AddScoped<IGuardianRepository, GuardianRepository>();
         services.AddScoped<IGuardianInvitationRepository, GuardianInvitationRepository>();
+        services.AddScoped<IReportRepository, ReportRepository>();
 
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUser, CurrentUser>();

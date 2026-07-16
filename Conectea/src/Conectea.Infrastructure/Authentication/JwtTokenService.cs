@@ -17,9 +17,7 @@ public class JwtTokenService : IJwtTokenService
     }
 
 
-    public string GenerateToken(
-        Guid userId,
-        string email)
+    public string GenerateToken(Guid userId, string email)
     {
         var claims = new[]
     {

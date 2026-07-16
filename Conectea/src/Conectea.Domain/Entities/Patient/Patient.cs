@@ -13,8 +13,8 @@ public class Patient
     public DateTime UpdatedAt { get; set; }
     public ICollection<PatientTherapist> Therapists { get; set; } = [];
     public ICollection<PatientGuardian> Guardians { get; set; } = [];
+    public ICollection<Report> Reports { get; set; } = new List<Report>();
 
-    // Futuramente
+    // Future
     // public ICollection<Session> Sessions { get; set; } = [];
-    // public ICollection<Report> Reports { get; set; } = [];
 }
