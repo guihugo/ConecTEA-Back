@@ -113,6 +113,7 @@ public static class DependencyInjection
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IInvitationCodeGenerator, InvitationCodeGenerator>();
         services.AddScoped<IEncryptionService, AesEncryptionService>();
+        services.AddScoped<IReportService, ReportService>();
 
         // Repositories
         services.AddScoped<IPatientRepository, PatientRepository>();

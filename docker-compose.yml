@@ -1,12 +1,36 @@
 services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: conectea-api
+    restart: always
+    ports:
+      - "5034:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=conectea;Username=conectea;Password=conectea"
+
+      Jwt__Key: SENHA
+      Jwt__Issuer: Conectea.API
+      Jwt__ExpirationMinutes: 60
+      Jwt__Audience: Conectea.Client
+
+      Encryption__Key: SENHA
+
+    depends_on:
+      - postgres
+
   postgres:
     image: postgres:16
     container_name: conectea-postgres
     restart: always
     environment:
-      POSTGRES_USER: 
-      POSTGRES_PASSWORD: 
-      POSTGRES_DB: 
+      POSTGRES_USER: conectea
+      POSTGRES_PASSWORD: conectea
+      POSTGRES_DB: conectea
     ports:
       - "5432:5432"
     volumes:
