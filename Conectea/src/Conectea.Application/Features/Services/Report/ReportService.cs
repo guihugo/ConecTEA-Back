@@ -25,12 +25,8 @@ public class ReportService : IReportService
 
 
         var therapist = await _therapistRepository
-            .GetByUserIdAsync(userId);
+            .GetByUserIdAsync(userId) ?? throw new NotFoundException("Terapeuta não encontrado.");
 
-        if (therapist is null)
-        {
-            throw new NotFoundException("Terapeuta não encontrado.");
-        }
         var encrypted =
             _encryption.Encrypt(dto.Content);
 
@@ -51,6 +47,30 @@ public class ReportService : IReportService
         await _repository.AddAsync(report);
     }
 
+    public async Task<IEnumerable<ReportResponse>> GetAllAsync()
+    {
+        var userId = _currentUserService.UserId;
+
+         var therapist = await _therapistRepository
+            .GetByUserIdAsync(userId) ?? throw new NotFoundException("Terapeuta não encontrado.");
+
+        IEnumerable<Report> reports = await _repository.GetByTherapistIdAsync(therapist.Id);
+
+        return reports.Select(report => new ReportResponse
+        {
+            Id = report.Id,
+            PatientId = report.PatientId,
+            Title = report.Title,
+            ReportType = report.ReportType,
+            Status = report.Status,
+            Content = _encryption.Decrypt(report.EncryptedContent),
+            CreatedBy = report.CreatedBy,
+            CreatedAt = report.CreatedAt,
+            UpdatedAt = report.UpdatedAt
+        });
+
+    }
+
     public async Task<Report?> GetByIdAsync(Guid id)
     {
         var report = await _repository.GetByIdAsync(id);
@@ -63,8 +83,21 @@ public class ReportService : IReportService
 
         return report;
     }
-    public async Task<IEnumerable<Report>> GetByPatientIdAsync(Guid patientId)
+    public async Task<IEnumerable<ReportResponse>> GetByPatientIdAsync(Guid patientId)
     {
-        return await _repository.GetByPatientIdAsync(patientId);
+        IEnumerable<Report> reports = await _repository.GetByPatientIdAsync(patientId);
+
+        return reports.Select(report => new ReportResponse
+        {
+            Id = report.Id,
+            PatientId = report.PatientId,
+            Title = report.Title,
+            ReportType = report.ReportType,
+            Status = report.Status,
+            Content = _encryption.Decrypt(report.EncryptedContent),
+            CreatedBy = report.CreatedBy,
+            CreatedAt = report.CreatedAt,
+            UpdatedAt = report.UpdatedAt
+        });
     }
 }

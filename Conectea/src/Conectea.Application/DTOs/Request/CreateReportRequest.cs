@@ -8,5 +8,4 @@ public class CreateReportRequest
 
     public string Content { get; set; } = "";
 
-    public Guid CreatedBy { get; set; }
 }

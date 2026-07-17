@@ -7,6 +7,7 @@ public interface IReportRepository
     Task<Report?> GetByIdAsync(Guid id);
 
     Task<IEnumerable<Report>> GetByPatientIdAsync(Guid patientId);
+    Task<IEnumerable<Report>> GetByTherapistIdAsync(Guid therapistId);
 
     Task AddAsync(Report report);
 

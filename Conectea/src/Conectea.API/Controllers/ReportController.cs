@@ -24,8 +24,8 @@ public class ReportController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("{id:guid}") ]
-    public async Task<IActionResult> GetByIdAsync(Guid id)
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetByReportIdAsync(Guid id)
     {
         Report? report = await _reportService.GetByIdAsync(id);
 
@@ -35,5 +35,31 @@ public class ReportController : ControllerBase
         }
 
         return Ok(report);
+    }
+
+    // GET /api/reports/patient/{patientId}
+    [HttpGet("patient/{patientId:guid}")]
+    public async Task<ActionResult<IEnumerable<ReportResponse>>> GetByPatientIdAsync(Guid patientId)
+    {
+        IEnumerable<ReportResponse>? reports = await _reportService.GetByPatientIdAsync(patientId);
+
+        if (reports is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(reports);
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<ReportResponse>>> GetAllAsync()
+    {
+        IEnumerable<ReportResponse>? reports = await _reportService.GetAllAsync();
+
+        if(reports is null)
+        {
+            return NotFound();
+        }
+        return Ok(reports);
     }
 }

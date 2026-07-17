@@ -42,4 +42,12 @@ class ReportRepository : IReportRepository
 
         return Task.CompletedTask;
     }
+
+    public async Task<IEnumerable<Report>> GetByTherapistIdAsync(Guid therapistId)
+    {
+        return await _context.Reports
+            .Where(r => r.CreatedBy == therapistId)
+            .OrderByDescending(r => r.CreatedAt)
+            .ToListAsync();
+    }
 }
