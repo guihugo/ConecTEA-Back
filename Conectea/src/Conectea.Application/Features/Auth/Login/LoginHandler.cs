@@ -1,5 +1,6 @@
 using Conectea.Application.DTOs.Authentication;
 using Conectea.Application.Interfaces;
+using Conectea.Domain.Enums;
 
 namespace Conectea.Application.Features.Auth.Login;
 
@@ -30,10 +31,13 @@ public class LoginHandler
                 Error = result.Error
             };
         }
+        var roleName = ((UserRole)result.Role).ToString();
+
 
         string token = _jwtTokenService.GenerateToken(
             result.UserId!.Value,
-            result.Email!
+            result.Email!,
+            roleName
         );
 
         return new LoginResponse

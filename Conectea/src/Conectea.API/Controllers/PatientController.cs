@@ -1,5 +1,6 @@
 using Conectea.Application.Features.Invitations.AcceptInvitation;
 using Conectea.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Conectea.API.Controllers;
@@ -41,12 +42,36 @@ public class PatientController : ControllerBase
 
         return Ok(patient);
     }
-    [HttpGet("therapist/")]
-    public async Task<ActionResult<IEnumerable<PatientResponse>>> GetByPacientByTherapistIdAsync()
+    [HttpGet("therapist/patients")]
+    [Authorize(Roles = "Therapist")]
+    public async Task<ActionResult<IEnumerable<PatientResponse>>> GetTherapistPatients()
     {
-        var patients = await _patientService.GetByPacientByTherapistIdAsync();
+        IEnumerable<PatientResponse> patients = await _patientService.GetByPacientByTherapistIdAsync();
 
         return Ok(patients);
+    }
+
+
+    [HttpGet("guardian/patient")]
+    [Authorize(Roles = "Guardian")]
+    public async Task<ActionResult<PatientResponse>> GetGuardianPatient()
+    {
+        IEnumerable<PatientResponse> patient = await _patientService.GetByPacientByGuardiantIdAsync();
+
+        return Ok(patient);
+    }
+
+    [Authorize]
+    [HttpGet("test")]
+    public IActionResult Test()
+    {
+        return Ok(new
+        {
+            User = User.Identity?.Name,
+            Roles = User.Claims
+                .Where(c => c.Type.Contains("role"))
+                .Select(c => c.Value)
+        });
     }
 
     [HttpPut("{id:guid}")]

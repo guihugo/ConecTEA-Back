@@ -53,4 +53,12 @@ public class PatientRepository : IPatientRepository
             .Where(p => p.Therapists.Any(t => t.TherapistId == therapistId))
             .ToListAsync();
     }
+
+    public async Task<IEnumerable<Patient>> GetByGuardianIdAsync(Guid guardianId)
+    {
+        return await _context.Patients
+            .AsNoTracking()
+            .Where(p => p.Guardians.Any(t => t.GuardianId == guardianId))
+            .ToListAsync();
+    }
 }

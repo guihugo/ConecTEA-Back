@@ -17,7 +17,7 @@ public class JwtTokenService : IJwtTokenService
     }
 
 
-    public string GenerateToken(Guid userId, string email)
+    public string GenerateToken(Guid userId, string email, string role)
     {
         var claims = new[]
     {
@@ -34,6 +34,11 @@ public class JwtTokenService : IJwtTokenService
         new Claim(
             JwtRegisteredClaimNames.Email,
             email
+        ),
+
+        new Claim(
+            ClaimTypes.Role,
+            role
         )
     };
 
