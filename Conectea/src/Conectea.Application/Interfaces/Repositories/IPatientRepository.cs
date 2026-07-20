@@ -8,5 +8,5 @@ public interface IPatientRepository
     Task<Patient?> GetByIdAsync(Guid id);
     Task<IEnumerable<Patient>> GetAllAsync();
     Task<IEnumerable<Patient>> GetByTherapistIdAsync(Guid therapistId);
-    Task<IEnumerable<Patient>> GetByGuardianIdAsync(Guid guardianId);
+    Task<Patient?> GetByGuardianIdAsync(Guid guardianId);
 }

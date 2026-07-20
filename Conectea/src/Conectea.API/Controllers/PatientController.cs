@@ -42,7 +42,7 @@ public class PatientController : ControllerBase
 
         return Ok(patient);
     }
-    [HttpGet("therapist/patients")]
+    [HttpGet("mine")]
     [Authorize(Roles = "Therapist")]
     public async Task<ActionResult<IEnumerable<PatientResponse>>> GetTherapistPatients()
     {
@@ -52,11 +52,11 @@ public class PatientController : ControllerBase
     }
 
 
-    [HttpGet("guardian/patient")]
+    [HttpGet("my")]
     [Authorize(Roles = "Guardian")]
     public async Task<ActionResult<PatientResponse>> GetGuardianPatient()
     {
-        IEnumerable<PatientResponse> patient = await _patientService.GetByPacientByGuardiantIdAsync();
+        PatientResponse patient = await _patientService.GetMyPatientAsync();
 
         return Ok(patient);
     }

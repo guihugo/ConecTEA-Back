@@ -54,11 +54,11 @@ public class PatientRepository : IPatientRepository
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Patient>> GetByGuardianIdAsync(Guid guardianId)
+    public async Task<Patient?> GetByGuardianIdAsync(Guid guardianId)
     {
         return await _context.Patients
             .AsNoTracking()
-            .Where(p => p.Guardians.Any(t => t.GuardianId == guardianId))
-            .ToListAsync();
+            .FirstOrDefaultAsync(p =>
+                p.Guardians.Any(g => g.GuardianId == guardianId));
     }
 }

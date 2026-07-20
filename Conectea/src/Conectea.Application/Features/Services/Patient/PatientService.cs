@@ -13,7 +13,7 @@ public class PatientService : IPatientService
     private readonly ITherapistRepository _therapistRepository;
     private readonly IGuardianRepository _guardianRepository;
     private readonly IGuardianInvitationService _guardianInvitationService;
-    public PatientService(IPatientRepository patientRepository, ICurrentUser currentUser, ITherapistRepository therapistRepository, 
+    public PatientService(IPatientRepository patientRepository, ICurrentUser currentUser, ITherapistRepository therapistRepository,
     IGuardianRepository guardianRepository, IGuardianInvitationService guardianInvitationService)
     {
         _patientRepository = patientRepository;
@@ -89,23 +89,27 @@ public class PatientService : IPatientService
         throw new NotImplementedException();
     }
 
-    public async Task<IEnumerable<PatientResponse>> GetByPacientByGuardiantIdAsync()
+    public async Task<PatientResponse> GetMyPatientAsync()
     {
-        Guid userId = _currentUserService.UserId;
-        Guardian guardian = await _guardianRepository.GetByUserIdAsync(userId) ?? throw new NotFoundException("Responsável não encontrado.");
+        var userId = _currentUserService.UserId;
 
-        IEnumerable<Patient> patients = await _patientRepository.GetByGuardianIdAsync(guardian.Id);
-        return patients.Select(p => new PatientResponse
+        var guardian = await _guardianRepository.GetByUserIdAsync(userId)
+            ?? throw new NotFoundException("Responsável não encontrado.");
+
+        var patient = await _patientRepository.GetByGuardianIdAsync(guardian.Id)
+            ?? throw new NotFoundException("Paciente não encontrado.");
+
+        return new PatientResponse
         {
-            Id = p.Id,
-            FullName = p.FullName,
-            BirthDate = p.BirthDate,
-            Gender = p.Gender,
-            Diagnosis = p.Diagnosis,
-            Observation = p.Observation,
-            CreatedAt = p.CreatedAt,
-            UpdatedAt = p.UpdatedAt
-        });
+            Id = patient.Id,
+            FullName = patient.FullName,
+            BirthDate = patient.BirthDate,
+            Gender = patient.Gender,
+            Diagnosis = patient.Diagnosis,
+            Observation = patient.Observation,
+            CreatedAt = patient.CreatedAt,
+            UpdatedAt = patient.UpdatedAt
+        };
     }
 
     public async Task<IEnumerable<PatientResponse>> GetByPacientByTherapistIdAsync()
