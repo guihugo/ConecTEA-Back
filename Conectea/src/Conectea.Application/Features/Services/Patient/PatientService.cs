@@ -112,31 +112,6 @@ public class PatientService : IPatientService
         };
     }
 
-    public async Task<IEnumerable<PatientResponse>> GetByPacientByTherapistIdAsync()
-    {
-        var userId = _currentUserService.UserId;
-        var therapist = await _therapistRepository
-            .GetByUserIdAsync(userId);
-
-        if (therapist is null)
-        {
-            throw new NotFoundException("Terapeuta não encontrado.");
-        }
-
-        var patients = await _patientRepository.GetByTherapistIdAsync(therapist.Id);
-        return patients.Select(p => new PatientResponse
-        {
-            Id = p.Id,
-            FullName = p.FullName,
-            BirthDate = p.BirthDate,
-            Gender = p.Gender,
-            Diagnosis = p.Diagnosis,
-            Observation = p.Observation,
-            CreatedAt = p.CreatedAt,
-            UpdatedAt = p.UpdatedAt
-        });
-    }
-
     public Task UpdateAsync(Guid id, UpdatePatientRequest request)
     {
         throw new NotImplementedException();

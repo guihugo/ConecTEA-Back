@@ -10,7 +10,6 @@ public interface IPatientService
 
     Task DeleteAsync(Guid id);
 
-    Task<IEnumerable<PatientResponse>> GetByPacientByTherapistIdAsync();
     Task<PatientResponse> GetMyPatientAsync();
 
 }

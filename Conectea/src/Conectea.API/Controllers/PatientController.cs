@@ -17,7 +17,7 @@ public class PatientController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<CreatePatientResponse>> Create(CreatePatientRequest request)
+    public async Task<ActionResult<CreatePatientResponse>> CreatePatient(CreatePatientRequest request)
     {
         var response = await _patientService.CreateAsync(request);
 
@@ -42,15 +42,6 @@ public class PatientController : ControllerBase
 
         return Ok(patient);
     }
-    [HttpGet("mine")]
-    [Authorize(Roles = "Therapist")]
-    public async Task<ActionResult<IEnumerable<PatientResponse>>> GetTherapistPatients()
-    {
-        IEnumerable<PatientResponse> patients = await _patientService.GetByPacientByTherapistIdAsync();
-
-        return Ok(patients);
-    }
-
 
     [HttpGet("my")]
     [Authorize(Roles = "Guardian")]

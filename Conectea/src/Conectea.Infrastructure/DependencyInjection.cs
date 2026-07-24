@@ -115,6 +115,7 @@ public static class DependencyInjection
         services.AddScoped<IEncryptionService, AesEncryptionService>();
         services.AddScoped<IReportService, ReportService>();
         services.AddScoped<IAppointmentService, AppointmentService>();
+        services.AddScoped<ITherapistService, TherapistService>();
 
         // Repositories
         services.AddScoped<IPatientRepository, PatientRepository>();
