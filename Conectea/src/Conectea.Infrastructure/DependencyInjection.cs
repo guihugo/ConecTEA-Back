@@ -114,6 +114,7 @@ public static class DependencyInjection
         services.AddScoped<IInvitationCodeGenerator, InvitationCodeGenerator>();
         services.AddScoped<IEncryptionService, AesEncryptionService>();
         services.AddScoped<IReportService, ReportService>();
+        services.AddScoped<IAppointmentService, AppointmentService>();
 
         // Repositories
         services.AddScoped<IPatientRepository, PatientRepository>();
@@ -121,6 +122,7 @@ public static class DependencyInjection
         services.AddScoped<IGuardianRepository, GuardianRepository>();
         services.AddScoped<IGuardianInvitationRepository, GuardianInvitationRepository>();
         services.AddScoped<IReportRepository, ReportRepository>();
+        services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUser, CurrentUser>();
