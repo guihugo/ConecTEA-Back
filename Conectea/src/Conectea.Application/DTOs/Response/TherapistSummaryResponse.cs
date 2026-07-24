@@ -6,5 +6,4 @@ public class TherapistSummaryResponse
 
     public string FullName { get; set; } = string.Empty;
 
-    public string? Specialty { get; set; }
 }

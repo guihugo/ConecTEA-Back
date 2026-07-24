@@ -115,8 +115,6 @@ public class PatientService : IPatientService
     public async Task<IEnumerable<PatientResponse>> GetByPacientByTherapistIdAsync()
     {
         var userId = _currentUserService.UserId;
-
-
         var therapist = await _therapistRepository
             .GetByUserIdAsync(userId);
 
