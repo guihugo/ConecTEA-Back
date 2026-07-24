@@ -19,6 +19,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<PatientGuardian> PatientGuardians => Set<PatientGuardian>();
     public DbSet<GuardianInvitation> GuardianInvitations => Set<GuardianInvitation>();
     public DbSet<Report> Reports => Set<Report>();
+    public DbSet<Appointment> Appointments => Set<Appointment>();
     
 
 
