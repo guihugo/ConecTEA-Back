@@ -6,6 +6,7 @@ namespace Conectea.API.Controllers
 {
     [ApiController]
     [Route("api/guardian")]
+    [Authorize(Roles = "Guardian")]
     public class GuardianController : ControllerBase
     {
         private readonly IGuardianService _guardianService;
@@ -13,10 +14,12 @@ namespace Conectea.API.Controllers
         {
             _guardianService = guardianService;
         }
-        [HttpGet("dashboard")]
-        public async Task<IActionResult> GetDashboard()
+        [HttpGet("patient")]
+        public async Task<ActionResult<PatientResponse>> GetGuardianPatient()
         {
-            return Ok();
+            PatientResponse? patient = await _guardianService.GetByPacientByGuardiantIdAsync();
+
+            return Ok(patient);
         }
     }
 }

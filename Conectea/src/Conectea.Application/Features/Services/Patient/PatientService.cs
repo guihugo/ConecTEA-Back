@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Conectea.Application.Exceptions;
 using Conectea.Application.Interfaces;
 using Conectea.Application.Interfaces.Repositories;
@@ -13,14 +14,16 @@ public class PatientService : IPatientService
     private readonly ITherapistRepository _therapistRepository;
     private readonly IGuardianRepository _guardianRepository;
     private readonly IGuardianInvitationService _guardianInvitationService;
+    private readonly IAppointmentRepository appointmentRepository;
     public PatientService(IPatientRepository patientRepository, ICurrentUser currentUser, ITherapistRepository therapistRepository,
-    IGuardianRepository guardianRepository, IGuardianInvitationService guardianInvitationService)
+    IGuardianRepository guardianRepository, IGuardianInvitationService guardianInvitationService, IAppointmentRepository appointmentRepository)
     {
         _patientRepository = patientRepository;
         _currentUserService = currentUser;
         _therapistRepository = therapistRepository;
         _guardianRepository = guardianRepository;
         _guardianInvitationService = guardianInvitationService;
+        this.appointmentRepository = appointmentRepository;
     }
     public async Task<CreatePatientResponse> CreateAsync(CreatePatientRequest request)
     {
@@ -84,19 +87,9 @@ public class PatientService : IPatientService
         throw new NotImplementedException();
     }
 
-    public Task<PatientResponse?> GetByIdAsync(Guid id)
+    public async Task<PatientResponse?> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
-    }
-
-    public async Task<PatientResponse> GetMyPatientAsync()
-    {
-        var userId = _currentUserService.UserId;
-
-        var guardian = await _guardianRepository.GetByUserIdAsync(userId)
-            ?? throw new NotFoundException("Responsável não encontrado.");
-
-        var patient = await _patientRepository.GetByGuardianIdAsync(guardian.Id)
+        Patient patient = await _patientRepository.GetByIdAsync(id)
             ?? throw new NotFoundException("Paciente não encontrado.");
 
         return new PatientResponse
@@ -112,6 +105,11 @@ public class PatientService : IPatientService
         };
     }
 
+    public async Task<List<Appointment>> GetPatientAppointments(Guid patientId)
+    {
+        return await appointmentRepository.GetAppointmentsByPatientIdAsync(patientId)
+            ?? throw new Exception("Nenhum agendamento encontrado");
+    }
     public Task UpdateAsync(Guid id, UpdatePatientRequest request)
     {
         throw new NotImplementedException();

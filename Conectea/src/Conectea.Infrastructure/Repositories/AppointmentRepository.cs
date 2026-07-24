@@ -22,7 +22,16 @@ public class AppointmentRepository : IAppointmentRepository
         await _context.SaveChangesAsync();
     }
 
-
+    public async Task<List<Appointment>> GetAppointmentsByPatientIdAsync(Guid patientId)
+    {
+        return await _context.Appointments
+            .AsNoTracking()
+            .Include(a => a.Patient)
+            .Include(a => a.Therapist)
+            .Where(a => a.PatientId == patientId)
+            .OrderByDescending(a => a.StartTime)
+            .ToListAsync();
+    }
     public async Task<Appointment?> GetByIdAsync(Guid appointmentId)
     {
         return await _context.Appointments

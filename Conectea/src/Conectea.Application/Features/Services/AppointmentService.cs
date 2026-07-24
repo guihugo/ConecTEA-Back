@@ -8,7 +8,7 @@ using Conectea.Domain.Enums;
 
 public class AppointmentService : IAppointmentService
 {
-    private readonly IAppointmentRepository _repository;
+    private readonly IAppointmentRepository appointmentRepository;
     private readonly ICurrentUser _currentUserService;
     private readonly ITherapistRepository _therapistRepository;
     private readonly IGuardianRepository _guardianRepository;
@@ -16,7 +16,7 @@ public class AppointmentService : IAppointmentService
 
     public AppointmentService(IAppointmentRepository repository, ICurrentUser currentUserService, ITherapistRepository therapistRepository, IGuardianRepository guardianRepository, IPatientRepository patientRepository)
     {
-        _repository = repository;
+        this.appointmentRepository = repository;
         _currentUserService = currentUserService;
         _therapistRepository = therapistRepository;
         _guardianRepository = guardianRepository;
@@ -43,14 +43,14 @@ public class AppointmentService : IAppointmentService
             UpdatedAt = DateTime.UtcNow
         };
 
-        await _repository.AddAsync(appointment);
+        await appointmentRepository.AddAsync(appointment);
         return MapToResponse(appointment);
     }
 
 
     public async Task<AppointmentResponse?> GetByIdAsync(Guid appointmentId)
     {
-        Appointment? appointment = await _repository.GetByIdAsync(appointmentId) ?? throw new Exception("Agendamento não encontrado");
+        Appointment? appointment = await appointmentRepository.GetByIdAsync(appointmentId) ?? throw new Exception("Agendamento não encontrado");
 
         return MapToResponse(appointment);
     }
@@ -61,7 +61,7 @@ public class AppointmentService : IAppointmentService
         Therapist therapist = await _therapistRepository
             .GetByUserIdAsync(userId) ?? throw new NotFoundException("Terapeuta não encontrado.");
 
-        var appointments = await _repository
+        List<Appointment> appointments = await appointmentRepository
             .GetByTherapistIdAsync(therapist.Id);
 
 
@@ -75,7 +75,7 @@ public class AppointmentService : IAppointmentService
         Guardian guardian = await _guardianRepository.GetByUserIdAsync(userId) ?? throw new NotFoundException("Responsável não encontrado");
         Patient patient = await _patientRepository.GetByGuardianIdAsync(guardian.Id) ?? throw new NotFoundException("Paciente não encontrado");
 
-        Appointment appointment = await _repository
+        Appointment appointment = await appointmentRepository
             .GetNextByPatientIdAsync(patient.Id) ?? throw new NotFoundException("Agendamento não encontrado");
 
         return MapToResponse(appointment);
@@ -84,14 +84,14 @@ public class AppointmentService : IAppointmentService
 
     public async Task UpdateStatusAsync(Guid appointmentId, UpdateAppointmentStatusRequest request)
     {
-        Appointment? appointment = await _repository
+        Appointment? appointment = await appointmentRepository
             .GetByIdAsync(appointmentId) ?? throw new NotFoundException("Agendamento não encontrado");
             
         appointment.Status = request.Status;
         appointment.UpdatedAt = DateTime.UtcNow;
 
 
-        await _repository.UpdateAsync(appointment);
+        await appointmentRepository.UpdateAsync(appointment);
     }
 
 
@@ -99,7 +99,7 @@ public class AppointmentService : IAppointmentService
         Guid appointmentId,
         UpdateAppointmentRequest request)
     {
-        Appointment appointment = await _repository
+        Appointment appointment = await appointmentRepository
             .GetByIdAsync(appointmentId) ?? throw new NotFoundException("Agendamento não encontrado");
 
         appointment.StartTime = request.StartTime;
@@ -108,7 +108,7 @@ public class AppointmentService : IAppointmentService
         appointment.UpdatedAt = DateTime.UtcNow;
 
 
-        await _repository.UpdateAsync(appointment);
+        await appointmentRepository.UpdateAsync(appointment);
     }
 
 

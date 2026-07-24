@@ -43,28 +43,6 @@ public class PatientController : ControllerBase
         return Ok(patient);
     }
 
-    [HttpGet("my")]
-    [Authorize(Roles = "Guardian")]
-    public async Task<ActionResult<PatientResponse>> GetGuardianPatient()
-    {
-        PatientResponse patient = await _patientService.GetMyPatientAsync();
-
-        return Ok(patient);
-    }
-
-    [Authorize]
-    [HttpGet("test")]
-    public IActionResult Test()
-    {
-        return Ok(new
-        {
-            User = User.Identity?.Name,
-            Roles = User.Claims
-                .Where(c => c.Type.Contains("role"))
-                .Select(c => c.Value)
-        });
-    }
-
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, UpdatePatientRequest request)
     {
@@ -72,6 +50,14 @@ public class PatientController : ControllerBase
 
         return NoContent();
     }
+    [HttpGet("appointment/{id:guid}")]
+    public async Task<IActionResult> GetAppointment(Guid id)
+    {
+        var appointment = await _patientService.GetPatientAppointments(id);
+
+        return Ok(appointment);
+    }
+    
 
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)

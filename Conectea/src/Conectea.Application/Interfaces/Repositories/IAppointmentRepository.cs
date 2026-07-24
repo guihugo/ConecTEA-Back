@@ -7,10 +7,8 @@ public interface IAppointmentRepository
     Task AddAsync(Appointment appointment);
 
     Task<Appointment?> GetByIdAsync(Guid appointmentId);
-
+    Task<List<Appointment>> GetAppointmentsByPatientIdAsync(Guid patientId);
     Task<List<Appointment>> GetByTherapistIdAsync(Guid therapistId);
-
     Task<Appointment?> GetNextByPatientIdAsync(Guid patientId);
-
     Task UpdateAsync(Appointment appointment);
 }
